@@ -1,0 +1,42 @@
+# Build output
+buildroot/output/
+buildroot/dl/
+buildroot/.config
+buildroot/.config.old
+buildroot/.auto.deps
+
+# Generated disk images
+buildroot/*.img
+
+# Hypercube compiled artifacts
+Hypercube/os/linux/hypercube_fuzzer
+Hypercube/os/linux/*.o
+Hypercube/os/src/*.o
+Hypercube/os/tesseract/*.o
+Hypercube/os/*.iso
+Hypercube/os/*.img
+Hypercube/config.h
+
+# Generic compiled artifacts
+*.o
+*.a
+*.so
+*.elf
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# QEMU builds (targets/)
+targets/qemu-*/
+targets/*.tar.*
+
+# Editor / OS
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
