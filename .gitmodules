@@ -1,0 +1,6 @@
+[submodule "Hypercube"]
+	path = Hypercube
+	url = https://github.com/HS0n4/Hypercube.git
+[submodule "buildroot"]
+	path = buildroot
+	url = https://github.com/HS0n4/buildroot.git
