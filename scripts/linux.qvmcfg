@@ -1,0 +1,55 @@
+# linux.qvmcfg
+# QNX Hypervisor 2.2 / 7.1 - HyperCube Fuzzer (Linux guest)
+# Targets: virtio-net + shmem  + IB700 WDT
+#
+# Files needed on QNX host:
+#   /data/hypervisor/hypercube/bzImage       <- buildroot Linux 6.x kernel
+#   /data/hypervisor/hypercube/rootfs.ext4   <- buildroot rootfs with fuzzer
+
+system hypercube
+
+ram 0xa0000
+rom 0xc0000,0x40000
+ram 512M
+
+cpu
+cpu
+
+load /data/hypervisor/linux/bzImage
+cmdline "nolapic_timer tsc=unstable clearcpuid=waitpkg pmtmr=0 8250.io_pnp=0 console=ttyS0,115200n8 root=/dev/vda rw nomodeset mitigations=off reboot=t iomem=relaxed"
+
+vdev virtio-blk
+    hostdev /dev/lxdisk0
+
+vdev ioapic
+    loc 0xf8000000
+    intr apic
+    name myioapic
+vdev 8259
+    loc 0x20
+vdev 8259
+    loc 0xa0
+vdev timer8254
+    intr myioapic:0
+vdev hpet
+    loc 0xf8008000
+    intr myioapic:0,myioapic:8,myioapic:10
+vdev mc146818
+    reg 0x0b,0x02
+
+vdev ser8250
+    intr myioapic:4
+
+# Fuzz target 1: virtio-net
+vdev virtio-net
+    name hc_net
+    peer /dev/vdevpeers/hc_vp0
+
+# Fuzz target 2: shmem
+vdev shmem
+    create hc_shmem,0x400000
+    allow hc_shmem
+
+# Fuzz target 3: IB700 Watchdog
+vdev wdt-ib700
+    loc io:0x441

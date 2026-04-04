@@ -68,20 +68,8 @@ build-linux: configure-buildroot
 
 build-images: build-fuzzer build-linux
 	@echo "[BUILD] Packing FAT32 data images..."
-	$(SCRIPTS)/create_hypercube_image.sh
 	$(SCRIPTS)/create_image.sh
-
-run:
-	$(BUILDROOT)/run-qnx.sh
-
-fuzz:
-	$(SCRIPTS)/fuzz.sh
-
-monitor:
-	$(SCRIPTS)/monitor.sh
-
-shmem-test:
-	$(BUILDROOT)/create_shmem_test_image.sh
+	$(SCRIPTS)/create_hypercube_image.sh
 
 clean:
 	$(MAKE) -C $(HYPERCUBE)/os/linux clean

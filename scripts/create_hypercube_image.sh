@@ -25,6 +25,7 @@ ROOT="$(dirname "$SCRIPT_DIR")"
 HYPERCUBE_DIR="$ROOT/Hypercube"
 BUILDROOT_IMAGES="$ROOT/buildroot/output/images"
 OUTPUT_IMG="$ROOT/buildroot/hypercube-data.img"
+QVM_SCRIPT="$ROOT/scripts"
 
 # --- Step 1: Build hypercube_fuzzer and inject into rootfs -------------------
 echo "[1/3] Building hypercube_fuzzer (static)..."
@@ -32,9 +33,11 @@ make -C "$HYPERCUBE_DIR/os/linux" clean all
 strip "$HYPERCUBE_DIR/os/linux/hypercube_fuzzer"
 echo "      Binary: $(du -sh "$HYPERCUBE_DIR/os/linux/hypercube_fuzzer" | cut -f1)"
 
-echo "      Injecting into rootfs..."
-ROOTFS="$BUILDROOT_IMAGES/rootfs.ext2"
+echo "      Injecting into rootfs (working copy)..."
+ROOTFS_ORIG="$BUILDROOT_IMAGES/rootfs.ext2"
+ROOTFS="$BUILDROOT_IMAGES/rootfs-hc.ext2"
 
+cp "$ROOTFS_ORIG" "$ROOTFS"
 debugfs -w "$ROOTFS" <<EOF 2>/dev/null
 rm /usr/bin/hypercube_fuzzer
 write $HYPERCUBE_DIR/os/linux/hypercube_fuzzer /usr/bin/hypercube_fuzzer
@@ -49,8 +52,9 @@ dd if=/dev/zero of="$OUTPUT_IMG" bs=1M count=128 status=progress
 mformat -F -i "$OUTPUT_IMG" ::
 
 mcopy -i "$OUTPUT_IMG" "$BUILDROOT_IMAGES/bzImage"              ::bzImage
-mcopy -i "$OUTPUT_IMG" "$BUILDROOT_IMAGES/rootfs.ext2"          ::rootfs.ext4
-mcopy -i "$OUTPUT_IMG" "$HYPERCUBE_DIR/docs/hypercube.qvmcfg"   ::hypercube.qvmcfg
+mcopy -i "$OUTPUT_IMG" "$ROOTFS"                                ::rootfs.ext4
+mcopy -i "$OUTPUT_IMG" "$QVM_SCRIPT/hypercube.qvmcfg"           ::hypercube.qvmcfg
+mcopy -i "$OUTPUT_IMG" "$QVM_SCRIPT/start_hypercube.sh"         ::start_hypercube.sh
 # mcopy -i "$OUTPUT_IMG" "$SCRIPT_DIR/start_hypercube.sh"         ::start_hypercube.sh
 
 echo "      Files packed:"
