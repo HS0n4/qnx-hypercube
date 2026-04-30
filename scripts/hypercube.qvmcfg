@@ -44,7 +44,7 @@ vdev virtio-net
     name hc_net
     peer /dev/vdevpeers/hc_vp0
 
-# Fuzz target 2: ivshmem
+# Fuzz target 2: shmem
 vdev shmem
     create hc_shmem,0x400000
     allow hc_shmem

@@ -1,0 +1,42 @@
+# victim.qvmcfg
+# QNX Hypervisor 2.2 - Victim guest (attaches to hc_shmem created by linux guest)
+# Minimal config: just shmem + serial console
+# No disk needed - boots Linux kernel with initramfs only
+
+system victim
+
+ram 0xa0000
+rom 0xc0000,0x40000
+ram 256M
+
+cpu
+
+load /data/hypervisor/victim/bzImage
+cmdline "nolapic_timer tsc=unstable clearcpuid=waitpkg pmtmr=0 8250.io_pnp=0 console=ttyS0,115200n8 root=/dev/vda rw nomodeset mitigations=off reboot=t"
+
+vdev virtio-blk
+    hostdev /dev/victdisk0
+
+vdev ioapic
+    loc 0xf8000000
+    intr apic
+    name myioapic
+vdev 8259
+    loc 0x20
+vdev 8259
+    loc 0xa0
+vdev timer8254
+    intr myioapic:0
+vdev hpet
+    loc 0xf8008000
+    intr myioapic:0,myioapic:8,myioapic:10
+vdev mc146818
+    reg 0x0b,0x02
+
+vdev ser8250
+    intr myioapic:4
+
+# Attach to existing shmem (created by linux guest)
+# No "create" - just "allow" to attach as client
+vdev shmem
+    allow hc_shmem

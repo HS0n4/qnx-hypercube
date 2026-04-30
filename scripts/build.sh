@@ -70,6 +70,6 @@ case "$MODE" in
         echo "Build complete."
         info "hypercube-data.img : $(du -sh "$BUILDROOT/hypercube-data.img" | cut -f1)"
         info "linux-data.img     : $(du -sh "$BUILDROOT/linux-data.img" | cut -f1)"
-        echo "Next: make run  or  make fuzz"
+        echo "Next: boot QNX with the generated images, then run /data/hypervisor/start_hypercube.sh"
         ;;
 esac

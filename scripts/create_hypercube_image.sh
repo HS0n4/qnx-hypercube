@@ -55,6 +55,7 @@ mcopy -i "$OUTPUT_IMG" "$BUILDROOT_IMAGES/bzImage"              ::bzImage
 mcopy -i "$OUTPUT_IMG" "$ROOTFS"                                ::rootfs.ext4
 mcopy -i "$OUTPUT_IMG" "$QVM_SCRIPT/hypercube.qvmcfg"           ::hypercube.qvmcfg
 mcopy -i "$OUTPUT_IMG" "$QVM_SCRIPT/start_hypercube.sh"         ::start_hypercube.sh
+mcopy -i "$OUTPUT_IMG" "$QVM_SCRIPT/qnx_smoke_hypercube.sh"     ::qnx_smoke_hypercube.sh
 # mcopy -i "$OUTPUT_IMG" "$SCRIPT_DIR/start_hypercube.sh"         ::start_hypercube.sh
 
 echo "      Files packed:"
@@ -65,13 +66,13 @@ echo "[3/3] Done: $OUTPUT_IMG ($(du -sh "$OUTPUT_IMG" | cut -f1))"
 echo ""
 echo "Next: launch QEMU with this image (it is already referenced by run-qnx.sh as drv2)"
 echo ""
-echo "Automated setup: make fuzz  (builds, boots QEMU, SSHes into QNX, starts fuzzer)"
-echo ""
 echo "Manual setup on QNX host after boot:"
 echo "  mkdir -p /tmp/hc_data && mount -t dos /dev/hd2 /tmp/hc_data"
 echo "  mkdir -p /data/hypervisor/hypercube"
 echo "  cp /tmp/hc_data/bzImage /tmp/hc_data/rootfs.ext4 \\"
 echo "     /tmp/hc_data/hypercube.qvmcfg /data/hypervisor/hypercube/"
 echo "  cp /tmp/hc_data/start_hypercube.sh /data/hypervisor/"
+echo "  cp /tmp/hc_data/qnx_smoke_hypercube.sh /data/hypervisor/"
 echo "  chmod +x /data/hypervisor/start_hypercube.sh"
+echo "  chmod +x /data/hypervisor/qnx_smoke_hypercube.sh"
 echo "  sh /data/hypervisor/start_hypercube.sh"
