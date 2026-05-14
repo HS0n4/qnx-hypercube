@@ -40,3 +40,4 @@ targets/*.tar.*
 *~
 .idea/
 .vscode/
+.codex
