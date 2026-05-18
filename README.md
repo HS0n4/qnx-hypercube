@@ -139,8 +139,6 @@ make monitor
 
 ## Disclosure Status
 
-Vulnerability findings associated with this project are being handled through a coordinated disclosure process. Public exploit material is intentionally withheld until vendor-side review and remediation milestones are complete.
-
 ## License
 
 
